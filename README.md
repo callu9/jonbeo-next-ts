@@ -11,13 +11,12 @@ Framer Motion을 사용한 인터렉션 구현을 목표로 합니다.
 
 ## Getting Started 🚀
 
-run the development server:
-
 ```bash
+npx msw init public --save
+npm run server:portfolio
+npm run server:stocks
 npm run dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Goals 🥅
 
@@ -84,7 +83,7 @@ src/
 | 태그         | 설명                                                                          |
 | ------------ | ----------------------------------------------------------------------------- |
 | `feat: `     | 기능 추가                                                                     |
-| `fix: `      | 버그를 고친 경우 🛠                                                            |
+| `fix: `      | 버그를 고친 경우 🛠                                                           |
 | `docs: `     | 문서를 수정한 경우 📝                                                         |
 | `style: `    | CSS 등 사용자 UI 디자인 변경 🎨                                               |
 | `refactor: ` | 프로덕션 코드 리팩토링 🧑‍🔧                                                     |
@@ -92,3 +91,19 @@ src/
 | `chore: `    | 빌드 태스트 업데이트, 패키지 매니저를 설정하는 경우 (프로덕션 코드 변경 X) ⚙️ |
 | `rename: `   | 파일 혹은 폴더명을 수정하거나 옮기는 작업만인 경우 ✍️                         |
 | `remove: `   | 파일을 삭제하는 작업만 수행한 경우 🗑️                                         |
+
+## Styling Library 🎨
+
+### 1. TailwindCSS
+
+### 2. Framer Motion
+
+#### 2-1. 왜 Framer Motion을 썼을까?
+
+번들사이즈가 큰 편이다
+https://bundlephobia.com/package/framer-motion@7.2.0
+
+번들사이즈가 크다는 오해
+https://motion.dev/docs/react-reduce-bundle-size
+
+#### 2-2. Framer Motion 최적화
