@@ -1,0 +1,80 @@
+{
+	"list": [
+		{
+			"code": "FB",
+			"name": "페이스북",
+
+			"shares": 10,
+			"avgBuyPrice": 225,
+			"currentPrice": 290.11,
+
+			"profitLossMoney": 651.1,
+			"profitLossRate": 28.94,
+
+			"todayChangeMoney": 3.45,
+			"todayChangeRate": 1.2,
+
+			"recentCandles": [
+				{
+					"time": 1731120000000,
+					"open": 220.0,
+					"high": 230.0,
+					"low": 215.0,
+					"close": 225.0,
+					"volume": 100000
+				},
+				{
+					"time": 1731123600000,
+					"open": 225.0,
+					"high": 240.0,
+					"low": 220.0,
+					"close": 235.0,
+					"volume": 150000
+				},
+				{
+					"time": 1731127200000,
+					"open": 235.0,
+					"high": 250.0,
+					"low": 230.0,
+					"close": 245.0,
+					"volume": 200000
+				},
+				{
+					"time": 1731130800000,
+					"open": 245.0,
+					"high": 300.0,
+					"low": 240.0,
+					"close": 290.11,
+					"volume": 300000
+				}
+			],
+
+			"priceBoard": {
+				"code": "FB",
+				"bids": [
+					{ "price": 289.9, "shares": 200 },
+					{ "price": 289.5, "shares": 150 },
+					{ "price": 289.0, "shares": 100 }
+				],
+				"asks": [
+					{ "price": 290.3, "shares": 180 },
+					{ "price": 290.5, "shares": 200 },
+					{ "price": 291.0, "shares": 220 }
+				],
+				"updatedAt": 1731123499000
+			},
+
+			"updatedAt": 1731123499000
+		},
+		{
+			"code": "AAPL",
+			"name": "애플",
+			"shares": 5,
+			"avgBuyPrice": 140,
+			"currentPrice": 121.26,
+			"profitLossMoney": -93.7,
+			"profitLossRate": -13.39,
+			"updatedAt": 1731123499000
+		}
+	]
+}
