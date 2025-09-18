@@ -1,73 +1,73 @@
 {
-	"account": {
-		"cashBalance": 22829.13,
-		"todayProfitMoney": 786.88,
-		"todayProfitRate": 3.05
-	},
-	"items": [
-		{
-			"code": "FB",
-			"name": "페이스북",
-			"shares": 10,
-			"avgBuyPrice": 225,
-			"currentPrice": 290.11,
-			"profitLossMoney": 651.1,
-			"profitLossRate": 28.94
-		},
-		{
-			"code": "AAPL",
-			"name": "애플",
-			"shares": 5,
-			"avgBuyPrice": 140,
-			"currentPrice": 121.26,
-			"profitLossMoney": -93.7,
-			"profitLossRate": -13.39
-		},
-		{
-			"code": "AMZN",
-			"name": "아마존",
-			"shares": 2,
-			"avgBuyPrice": 3200,
-			"currentPrice": 3092.93,
-			"profitLossMoney": -214.14,
-			"profitLossRate": -3.35
-		},
-		{
-			"code": "NFLX",
-			"name": "넷플릭스",
-			"shares": 3,
-			"avgBuyPrice": 500,
-			"currentPrice": 538.85,
-			"profitLossMoney": 116.55,
-			"profitLossRate": 7.77
-		},
-		{
-			"code": "GOOG",
-			"name": "구글",
-			"shares": 1,
-			"avgBuyPrice": 1800,
-			"currentPrice": 2036.86,
-			"profitLossMoney": 236.86,
-			"profitLossRate": 13.16
-		},
-		{
-			"code": "CPNG",
-			"name": "쿠팡",
-			"shares": 20,
-			"avgBuyPrice": 30,
-			"currentPrice": 43.79,
-			"profitLossMoney": 275.8,
-			"profitLossRate": 45.97
-		},
-		{
-			"code": "ABNB",
-			"name": "에어비앤비",
-			"shares": 4,
-			"avgBuyPrice": 160,
-			"currentPrice": 178.85,
-			"profitLossMoney": 75.4,
-			"profitLossRate": 11.78
-		}
-	],
-	"updatedAt": 1731123499000
+  "account": {
+    "cashBalance": 22829.13,
+    "todayProfitMoney": 786.88,
+    "todayProfitRate": 3.05
+  },
+  "stocks": [
+    {
+      "code": "FB",
+      "name": "페이스북",
+      "shares": 10,
+      "avgBuyPrice": 225,
+      "currentPrice": 290.11,
+      "profitLossMoney": 651.1,
+      "profitLossRate": 28.94
+    },
+    {
+      "code": "AAPL",
+      "name": "애플",
+      "shares": 5,
+      "avgBuyPrice": 140,
+      "currentPrice": 121.26,
+      "profitLossMoney": -93.7,
+      "profitLossRate": -13.39
+    },
+    {
+      "code": "AMZN",
+      "name": "아마존",
+      "shares": 2,
+      "avgBuyPrice": 3200,
+      "currentPrice": 3092.93,
+      "profitLossMoney": -214.14,
+      "profitLossRate": -3.35
+    },
+    {
+      "code": "NFLX",
+      "name": "넷플릭스",
+      "shares": 3,
+      "avgBuyPrice": 500,
+      "currentPrice": 538.85,
+      "profitLossMoney": 116.55,
+      "profitLossRate": 7.77
+    },
+    {
+      "code": "GOOG",
+      "name": "구글",
+      "shares": 1,
+      "avgBuyPrice": 1800,
+      "currentPrice": 2036.86,
+      "profitLossMoney": 236.86,
+      "profitLossRate": 13.16
+    },
+    {
+      "code": "CPNG",
+      "name": "쿠팡",
+      "shares": 20,
+      "avgBuyPrice": 30,
+      "currentPrice": 43.79,
+      "profitLossMoney": 275.8,
+      "profitLossRate": 45.97
+    },
+    {
+      "code": "ABNB",
+      "name": "에어비앤비",
+      "shares": 4,
+      "avgBuyPrice": 160,
+      "currentPrice": 178.85,
+      "profitLossMoney": 75.4,
+      "profitLossRate": 11.78
+    }
+  ],
+  "updatedAt": 1731123499000
 }
