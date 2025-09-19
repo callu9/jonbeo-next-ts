@@ -13,7 +13,7 @@ export default function AmountStatus({
   name,
   cashBalance,
   todayProfitMoney,
-  todayProfitRate = 0,
+  todayProfitRate,
 }: AmountStatusProps) {
   const { isWon = false } = useUnitStore();
   const fontColor =

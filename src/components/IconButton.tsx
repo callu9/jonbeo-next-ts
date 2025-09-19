@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { HTMLAttributes } from "react";
 
 const Icons = {
   back: { url: "/icons/back.svg", alt: "뒤로가기" },
@@ -8,18 +9,13 @@ const Icons = {
   multiply: { url: "/icons/multiply.svg", alt: "곱하기" },
 };
 
-export default function IconButton({
-  iconNm,
-  onClick,
-}: {
+interface IconButtonProps extends HTMLAttributes<HTMLButtonElement> {
   iconNm: keyof typeof Icons;
-  onClick?: () => void;
-}) {
+}
+
+export default function IconButton({ iconNm, ...props }: IconButtonProps) {
   return (
-    <button
-      className="cursor-pointer rounded-full border border-gray-400 bg-white p-2"
-      onClick={onClick}
-    >
+    <button className="cursor-pointer rounded-full border border-gray-400 bg-white p-2" {...props}>
       <Image
         src={Icons[iconNm].url}
         alt={`${Icons[iconNm].alt} 버튼 이미지`}

@@ -1,9 +1,12 @@
 "use client";
 
 import AmountStatus, { AmountStatusSkeleton } from "@/components/AmountStatus";
+import StockDetailGraph, { StockDetailGraphSkeleton } from "@/components/StockDetailGraph";
 import { useMinLoading } from "@/hooks/useMinLoading";
 import { StockDetail } from "@/types/stock";
 import { useEffect, useState } from "react";
+
+const MIN_MS = 1_500;
 
 interface StockStatusProps
   extends Partial<
@@ -12,7 +15,7 @@ interface StockStatusProps
 
 export function StockStatusClient(props: StockStatusProps) {
   const [loading, setLoading] = useState(true);
-  const showSkeleton = useMinLoading(loading, 800);
+  const showSkeleton = useMinLoading(loading, MIN_MS);
 
   useEffect(() => {
     props.currentPrice && setLoading(false);
@@ -28,4 +31,15 @@ export function StockStatusClient(props: StockStatusProps) {
       todayProfitRate={props.profitLossRate}
     />
   );
+}
+
+export function StockDetailGraphClient(props: StockDetail) {
+  const [loading, setLoading] = useState(true);
+  const showSkeleton = useMinLoading(loading, MIN_MS);
+
+  useEffect(() => {
+    props && setLoading(false);
+  }, [props]);
+
+  return showSkeleton || !props ? <StockDetailGraphSkeleton /> : <StockDetailGraph {...props} />;
 }

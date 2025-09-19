@@ -12,7 +12,6 @@ export default function StockListItem({
   code,
   shares,
   currentPrice,
-  profitLossMoney,
   profitLossRate,
 }: PortfolioListItem) {
   const { isWon } = useUnitStore();

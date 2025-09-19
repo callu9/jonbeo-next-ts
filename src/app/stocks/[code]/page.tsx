@@ -1,11 +1,9 @@
 import { getStockDetail } from "@/apis/stocks";
 import IconButton from "@/components/IconButton";
-import { cn } from "@/utils/classNames";
 import { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { StockStatusClient } from "./StockDetailClient";
+import { StockDetailGraphClient, StockStatusClient } from "./StockDetailClient";
 
 // export const revalidate = 60; // ISR: 60초마다 재생성(선택)
 
@@ -43,20 +41,12 @@ export default async function StockDetailPage({ params }: { params: { code: stri
           <IconButton iconNm="back" />
         </Link>
       </div>
-      <div className="grid">
-        <div className="flex flex-col gap-2 px-5">
+      <div className="grid gap-8">
+        <div className="flex flex-col px-5">
           <StockStatusClient {...{ name, currentPrice, profitLossMoney, profitLossRate }} />
         </div>
-        <div className="flex-center relative mr-4 items-center self-stretch">
-          <div className={cn("relative mt-10 min-h-dvw w-full")}>
-            <Image
-              className="object-fit bg-clip-content bg-blend-soft-light"
-              src="/images/line-skeleton.svg"
-              alt="주식 차트 스켈레톤 이미지"
-              fill
-            />
-          </div>
-          <div className={cn("h-4 w-4 rounded-full", "bg-red-500")} />
+        <div className="self-stretch">
+          <StockDetailGraphClient {...detail} />
         </div>
       </div>
     </div>
