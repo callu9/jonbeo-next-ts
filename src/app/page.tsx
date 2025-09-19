@@ -1,5 +1,5 @@
 import { getPortfolio } from "@/apis/portfolio";
-import { AccountSummaryClient, StockListClient } from "./PorfolioClient";
+import { AccountSummaryClient, StockListClient } from "../components/portfolio/PorfolioClient";
 import { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {

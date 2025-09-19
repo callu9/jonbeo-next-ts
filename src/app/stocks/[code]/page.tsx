@@ -3,7 +3,10 @@ import IconButton from "@/components/IconButton";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { StockDetailGraphClient, StockStatusClient } from "./StockDetailClient";
+import {
+  StockDetailGraphClient,
+  StockStatusClient,
+} from "../../../components/stocks/StockDetailClient";
 
 // export const revalidate = 60; // ISR: 60초마다 재생성(선택)
 

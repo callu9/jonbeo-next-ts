@@ -16,9 +16,10 @@ export default function AmountStatus({
   todayProfitRate,
 }: AmountStatusProps) {
   const { isWon = false } = useUnitStore();
+  const upDown = todayProfitRate >= 0 ? 1 : -1;
+  const prefix = todayProfitRate > 0 ? "+" : "";
   const fontColor =
     todayProfitRate > 0 ? "text-red-500" : todayProfitRate < 0 ? "text-blue-500" : "";
-  const prefix = todayProfitRate > 0 ? "+" : "";
 
   return (
     <div className="flex flex-col gap-2">
@@ -30,9 +31,9 @@ export default function AmountStatus({
               <motion.span
                 key={`cashBalance-${Number(isWon)}`}
                 className="inline-block text-4xl font-bold"
-                initial={{ y: 50, opacity: 1 }}
+                initial={{ y: 50 * upDown, opacity: 1 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -50, opacity: 0 }}
+                exit={{ y: -50 * upDown, opacity: 0 }}
                 transition={{ duration: 1 }}
               >
                 {isWon ? `${formatWon(cashBalance)}원` : `$${formatDollar(cashBalance)}`}
@@ -47,9 +48,9 @@ export default function AmountStatus({
               <motion.span
                 key={`todayProfit-${Number(isWon)}`}
                 className={cn("inline-block text-lg font-semibold", fontColor)}
-                initial={{ y: 50, opacity: 1 }}
+                initial={{ y: 50 * upDown, opacity: 1 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -50, opacity: 0 }}
+                exit={{ y: -50 * upDown, opacity: 0 }}
                 transition={{ duration: 1 }}
               >
                 {isWon ? formatWon(todayProfitMoney) : formatDollar(todayProfitMoney)}

@@ -21,6 +21,7 @@ export default function IconButton({ iconNm, ...props }: IconButtonProps) {
         alt={`${Icons[iconNm].alt} 버튼 이미지`}
         width={20}
         height={20}
+        draggable={false}
       />
     </button>
   );

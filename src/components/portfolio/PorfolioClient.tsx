@@ -1,7 +1,7 @@
 "use client";
 
 import AmountStatus, { AmountStatusSkeleton } from "@/components/AmountStatus";
-import StockListItem, { StockListItemSkeleton } from "@/components/StockListItem";
+import StockListItem, { StockListItemSkeleton } from "@/components/portfolio/StockListItem";
 import { useMinLoading } from "@/hooks/useMinLoading";
 import { MyAccountSummary, PortfolioListItem } from "@/types/portfolio";
 import { useEffect, useState } from "react";

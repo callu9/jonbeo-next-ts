@@ -1,7 +1,7 @@
 "use client";
 
 import AmountStatus, { AmountStatusSkeleton } from "@/components/AmountStatus";
-import StockDetailGraph, { StockDetailGraphSkeleton } from "@/components/StockDetailGraph";
+import StockDetailGraph, { StockDetailGraphSkeleton } from "@/components/stocks/StockDetailGraph";
 import { useMinLoading } from "@/hooks/useMinLoading";
 import { StockDetail } from "@/types/stock";
 import { useEffect, useState } from "react";

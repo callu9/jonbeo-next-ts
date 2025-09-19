@@ -16,6 +16,7 @@ export default function StockListItem({
 }: PortfolioListItem) {
   const { isWon } = useUnitStore();
   const prefix = profitLossRate > 0 ? "+" : "";
+  const upDown = profitLossRate >= 0 ? 1 : -1;
   const fontColor = profitLossRate > 0 ? "text-red-500" : profitLossRate < 0 ? "text-blue-500" : "";
   return (
     <motion.button
@@ -38,9 +39,9 @@ export default function StockListItem({
               <motion.span
                 key={`cashBalance-${Number(isWon)}`}
                 className="inline-block text-lg"
-                initial={{ y: 50, opacity: 1 }}
+                initial={{ y: 50 * upDown, opacity: 1 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -50, opacity: 0 }}
+                exit={{ y: -50 * upDown, opacity: 0 }}
                 transition={{ duration: 1 }}
               >
                 {isWon ? formatWon(currentPrice) : formatDollar(currentPrice)}
@@ -53,9 +54,9 @@ export default function StockListItem({
                 <motion.span
                   key={`currentPrice-${Number(isWon)}`}
                   className="inline-block"
-                  initial={{ y: 50, opacity: 1 }}
+                  initial={{ y: 50 * upDown, opacity: 1 }}
                   animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -50, opacity: 0 }}
+                  exit={{ y: -50 * upDown, opacity: 0 }}
                   transition={{ duration: 1 }}
                 >
                   {isWon ? formatWon(currentPrice) : formatDollar(currentPrice)}
