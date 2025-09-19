@@ -4,6 +4,7 @@ import { cn } from "@/utils/classNames";
 import { formatDollar, formatNumberWithComma, formatWon } from "@/utils/common";
 import { AnimatePresence, motion } from "motion/react";
 import UnitButton from "./UnitButton";
+import AmountTransition from "./AmountTransition";
 
 interface AmountStatusProps extends MyAccountSummary {
   name?: string;
@@ -26,41 +27,29 @@ export default function AmountStatus({
       {name && <h2 className="text-lg text-gray-700 dark:text-gray-300">{name}</h2>}
       <div className="flex w-full flex-col gap-1">
         <div className="flex-sides">
-          <div className="relative overflow-hidden">
-            <AnimatePresence initial={false} mode="popLayout">
-              <motion.span
-                key={`cashBalance-${Number(isWon)}`}
-                className="inline-block text-4xl font-bold"
-                initial={{ y: 50 * upDown, opacity: 1 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -50 * upDown, opacity: 0 }}
-                transition={{ duration: 1 }}
-              >
-                {isWon ? `${formatWon(cashBalance)}원` : `$${formatDollar(cashBalance)}`}
-              </motion.span>
-            </AnimatePresence>
-          </div>
+          <AmountTransition
+            id="cashBalance"
+            fontStyle="text-4xl font-bold"
+            multiplier={upDown}
+            durSec={300}
+          >
+            {isWon ? `${formatWon(cashBalance)}원` : `$${formatDollar(cashBalance)}`}
+          </AmountTransition>
           <UnitButton />
         </div>
-        <div className="relative overflow-hidden">
-          <div className="flex-start gap-1">
-            <AnimatePresence initial={false} mode="popLayout">
-              <motion.span
-                key={`todayProfit-${Number(isWon)}`}
-                className={cn("inline-block text-lg font-semibold", fontColor)}
-                initial={{ y: 50 * upDown, opacity: 1 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -50 * upDown, opacity: 0 }}
-                transition={{ duration: 1 }}
-              >
-                {isWon ? formatWon(todayProfitMoney) : formatDollar(todayProfitMoney)}
-              </motion.span>
-            </AnimatePresence>
-            <span className={(cn("text-md font-semibold"), fontColor)}>
-              ({prefix}
-              {formatNumberWithComma(todayProfitRate)}%)
-            </span>
-          </div>
+        <div className="flex-start gap-1">
+          <AmountTransition
+            id="todayProfit"
+            fontStyle={`text-lg font-semibold ${fontColor}`}
+            multiplier={upDown}
+            durSec={400}
+          >
+            {isWon ? formatWon(todayProfitMoney) : formatDollar(todayProfitMoney)}
+          </AmountTransition>
+          <span className={(cn("text-md font-semibold"), fontColor)}>
+            ({prefix}
+            {formatNumberWithComma(todayProfitRate)}%)
+          </span>
         </div>
       </div>
     </div>

@@ -4,14 +4,16 @@ import { useUnitStore } from "@/store/unitStore";
 import { PortfolioListItem } from "@/types/portfolio";
 import { cn } from "@/utils/classNames";
 import { formatDollar, formatNumberWithComma, formatWon } from "@/utils/common";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import Link from "next/link";
+import AmountTransition from "../AmountTransition";
 
 export default function StockListItem({
   name,
   code,
   shares,
   currentPrice,
+  profitLossMoney,
   profitLossRate,
 }: PortfolioListItem) {
   const { isWon } = useUnitStore();
@@ -34,35 +36,18 @@ export default function StockListItem({
           <div className="text-gray-500">{formatNumberWithComma(shares)}주</div>
         </div>
         <div className="flex-lower flex-col">
-          <div className="relative overflow-hidden">
-            <AnimatePresence initial={false} mode="popLayout">
-              <motion.span
-                key={`cashBalance-${Number(isWon)}`}
-                className="inline-block text-lg"
-                initial={{ y: 50 * upDown, opacity: 1 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -50 * upDown, opacity: 0 }}
-                transition={{ duration: 1 }}
-              >
-                {isWon ? formatWon(currentPrice) : formatDollar(currentPrice)}
-              </motion.span>
-            </AnimatePresence>
-          </div>
+          <AmountTransition
+            id={`${code}-currentPrice`}
+            fontStyle="text-lg"
+            multiplier={upDown}
+            durSec={300}
+          >
+            {isWon ? formatWon(currentPrice) : formatDollar(currentPrice)}
+          </AmountTransition>
           <div className={cn("flex gap-0.5 font-semibold", fontColor)}>
-            <div className="relative overflow-hidden">
-              <AnimatePresence initial={false} mode="popLayout">
-                <motion.span
-                  key={`currentPrice-${Number(isWon)}`}
-                  className="inline-block"
-                  initial={{ y: 50 * upDown, opacity: 1 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -50 * upDown, opacity: 0 }}
-                  transition={{ duration: 1 }}
-                >
-                  {isWon ? formatWon(currentPrice) : formatDollar(currentPrice)}
-                </motion.span>
-              </AnimatePresence>
-            </div>
+            <AmountTransition id={`${code}-profitLossMoney`} multiplier={upDown} durSec={400}>
+              {isWon ? formatWon(profitLossMoney) : formatDollar(profitLossMoney)}
+            </AmountTransition>
             <span>
               ({prefix}
               {formatNumberWithComma(profitLossRate)}%)
