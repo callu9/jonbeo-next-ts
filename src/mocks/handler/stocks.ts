@@ -8,7 +8,6 @@ const notFound = (message = "not found") =>
   HttpResponse.json({ error: { code: "NOT_FOUND", message } }, { status: 404 });
 
 export const stocksHandler = [
-  // 상세 조회: GET /stocks/:code
   http.get(`${API_BASE}/stocks/:code`, async ({ params }) => {
     await delay(120);
     const code = String(params.code).toUpperCase();
