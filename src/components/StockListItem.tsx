@@ -23,7 +23,7 @@ export default function StockListItem({
       className="w-full py-2 hover:bg-gray-100 focus:bg-gray-200 dark:hover:bg-gray-800 focus:dark:bg-gray-700"
       initial={{ scale: 1 }}
       whileHover={{ scale: 1.025 }}
-      whileTap={{ scale: 0.99 }}
+      whileTap={{ scale: 0.99, backgroundColor: "#e5e7eb" }}
     >
       <Link className="flex-sides" href={`/stocks/${code}`}>
         <div className="flex-upper flex-col gap-1">
