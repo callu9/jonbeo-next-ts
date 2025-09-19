@@ -1,21 +1,20 @@
-"use client";
-
 import { getPortfolio } from "@/apis/portfolio";
-import AmountChange from "@/components/AmountChange";
-import StockListItem from "@/components/StockListItem";
-import { PortfolioListResponse } from "@/types/portfolio";
-import { useEffect, useState } from "react";
+import { AccountSummaryClient, StockListClient } from "./PorfolioClient";
+import { Metadata } from "next";
 
-export default function Portfolio() {
-  const [portfolio, setPortfolio] = useState<PortfolioListResponse | undefined>();
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "나의 존버금 현황 보기 | MyPortfolio",
+    description: "나의 계좌 잔액, 수익금, 수익률을 통해 존버금 현황을 확인하세요.",
+    openGraph: {
+      title: "존버금 현황",
+      description: "나의 수익률을 확인하세요.",
+    },
+  };
+}
 
-  async function getPortfolioData() {
-    const data = await getPortfolio();
-    if (data) setPortfolio(data);
-  }
-  useEffect(() => {
-    getPortfolioData();
-  }, []);
+export default async function PortfolioPage() {
+  const portfolio = await getPortfolio();
 
   return (
     <>
@@ -24,16 +23,12 @@ export default function Portfolio() {
       </div>
       <div className="flex flex-col gap-6 px-5 pt-16 pb-8">
         <div className="flex flex-col gap-2">
-          <h2 className="text-gray-700 dark:text-gray-300">
+          <h2 className="text-lg text-gray-600 dark:text-gray-400">
             나의 <strong>존버금 현황</strong>은?
           </h2>
-          {portfolio?.account && <AmountChange {...portfolio?.account} />}
+          <AccountSummaryClient accountSummary={portfolio?.account} />
         </div>
-        <div className="divide-y divide-gray-300 dark:divide-gray-700">
-          {portfolio?.stocks?.map((stock) => (
-            <StockListItem key={stock.code} {...stock} />
-          ))}
-        </div>
+        <StockListClient stocks={portfolio?.stocks} />
       </div>
     </>
   );

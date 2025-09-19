@@ -14,6 +14,6 @@ export async function getPortfolio(): Promise<PortfolioListResponse | undefined>
     const data = await response.json();
     return data;
   } catch (error) {
-    alert("로그인 요청 중 오류 발생: " + error);
+    console.log("로그인 요청 중 오류 발생: " + error);
   }
 }
