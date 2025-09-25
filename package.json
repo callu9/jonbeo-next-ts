@@ -11,6 +11,7 @@
     "server:stocks": "npx json-server --watch ./src/mocks/stocks.json --port=4001"
   },
   "dependencies": {
+    "@svgr/webpack": "^8.1.0",
     "clsx": "^2.1.1",
     "motion": "^12.23.12",
     "msw": "^2.11.2",
