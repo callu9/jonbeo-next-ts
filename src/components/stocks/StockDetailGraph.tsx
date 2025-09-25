@@ -1,16 +1,14 @@
 import { StockDetail } from "@/types/stock";
 import { cn } from "@/utils/classNames";
-import Image from "next/image";
+import { Graph } from "../../../public/images";
 import StockGraph from "./StockGraph";
 
 interface StockDetailGraph extends StockDetail {}
 
 export default function StockDetailGraph({
-  avgBuyPrice,
   currentPrice,
   profitLossRate,
   targetAveragePrice,
-  todayChangeRate,
 }: StockDetailGraph) {
   const dotColor =
     profitLossRate > 0
@@ -30,29 +28,17 @@ export default function StockDetailGraph({
         currentPrice={currentPrice}
         initialPercent={targetAveragePrice ? (targetAveragePrice / currentPrice) * 100 : undefined}
       />
-      <div className="relative mt-10 mr-6 h-full w-full">
-        <Image
-          className="object-fit"
-          src="/images/line-skeleton.svg"
-          alt="주식 차트 스켈레톤 이미지"
-          draggable={false}
-          fill
-        />
-      </div>
     </div>
   );
 }
 
 export function StockDetailGraphSkeleton() {
   return (
-    <div className="flex-center relative aspect-square items-center self-stretch">
-      <div className="relative mt-10 mr-6 h-full w-full animate-pulse">
-        <Image
-          className="opacity-50"
-          src="/images/line-skeleton.svg"
-          alt="주식 차트 스켈레톤 이미지"
-          fill
-        />
+    <div className="aspect-square">
+      <div className="flex-center relative aspect-square items-center self-stretch pt-10 pr-6">
+        <div className="relative w-full animate-pulse">
+          <Graph className="text-gray-400" alt="주식 차트 스켈레톤 이미지" />
+        </div>
       </div>
     </div>
   );

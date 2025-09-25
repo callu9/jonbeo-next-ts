@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/utils/classNames";
+import { useCallback, useEffect, useRef, useState } from "react";
 import IconButton from "../IconButton";
 
 export type PriceHandleProps = {
@@ -79,7 +79,7 @@ export default function PriceHandle({
   return (
     <div
       className={cn(
-        "absolute left-0 z-10 w-full select-none",
+        "absolute left-0 z-10 mt-1 w-full select-none",
         dragging ? "cursor-grabbing" : "cursor-grab"
       )}
       style={{ top: handleTop }}

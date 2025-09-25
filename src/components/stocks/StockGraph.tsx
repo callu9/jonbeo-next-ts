@@ -15,20 +15,21 @@ export type StockGraphProps = {
   className?: string;
 };
 
-const [TEMP_MIN, TEMP_MAX] = [150, 300];
+const [TEMP_MIN, TEMP_MAX] = [150, 350];
 
 export default function StockGraph({
   currentPrice,
-  initialPercent = 50,
+  initialPercent = 40,
   onChange,
   className,
 }: StockGraphProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [percent, setPercent] = useState<number>(initialPercent);
+  const currentPercent = Math.floor(((currentPrice - TEMP_MIN) / (TEMP_MAX - TEMP_MIN)) * 100);
 
   // 희망 평단가 = 현재가 * (percent / 100)
   const targetAveragePrice = useMemo(
-    () => Math.round(currentPrice * (percent / 100)),
+    () => Math.round(TEMP_MIN + (TEMP_MAX - TEMP_MIN) * (percent / 100)),
     [currentPrice, percent]
   );
 
@@ -50,12 +51,13 @@ export default function StockGraph({
   return (
     <div
       ref={containerRef}
-      className={cn("absolute inset-0 grid", className)}
+      className={cn("absolute inset-0 mt-10 grid", className)}
       aria-label="평단가 그래프"
     >
-      {/* 위/아래 영역 표시만 담당 */}
-      <GraphTrack percent={percent} />
-
+      <div className="relative h-full w-full pr-6">
+        {/* 위/아래 영역 표시만 담당 */}
+        <GraphTrack percent={percent} currentPercent={currentPercent} />
+      </div>
       {/* 핸들: 상호작용만 담당 (포인터/키보드) */}
       <PriceHandle
         containerRef={containerRef}
@@ -63,8 +65,7 @@ export default function StockGraph({
         onChange={handlePercentChange}
         ariaLabel="평단가 위치"
       />
-
-      {/* 디버그/표시용 배지 - 필요 시 제거 */}
+      {/* 표시용 배지 */}
       <div className="absolute top-2 right-2 rounded bg-black/60 px-2 py-1 text-xs text-white">
         {percent}% · {targetAveragePrice.toLocaleString()}원
       </div>

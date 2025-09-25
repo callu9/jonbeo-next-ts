@@ -48,9 +48,8 @@ export default async function StockDetailPage({ params }: { params: { code: stri
         <div className="flex flex-col px-5">
           <StockStatusClient {...{ name, currentPrice, profitLossMoney, profitLossRate }} />
         </div>
-        <div className="self-stretch">
-          <StockDetailGraphClient {...detail} />
-        </div>
+        {/* <StockDetailGraphSkeleton /> */}
+        <StockDetailGraphClient {...detail} />
       </div>
     </div>
   );
