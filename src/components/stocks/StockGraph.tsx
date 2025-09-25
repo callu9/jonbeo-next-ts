@@ -1,11 +1,11 @@
 "use client";
 
+import { useOverlayStore } from "@/store/overlayStore";
 import { cn } from "@/utils/classNames";
 import { useCallback, useMemo, useRef, useState } from "react";
-import PriceModal from "../PriceModal";
 import GraphTrack from "./GraphTrack";
 import PriceHandle from "./PriceHandle";
-import { useOverlayStore } from "@/store/overlayStore";
+import PriceModal from "./PriceModal";
 
 export type StockGraphProps = {
   /** 현재가 (KRW) */
@@ -74,7 +74,7 @@ export default function StockGraph({
           {percent}% · {targetAveragePrice.toLocaleString()}원
         </div>
       </div>
-      {modalFg && <PriceModal price={targetAveragePrice} />}
+      <PriceModal price={targetAveragePrice} />
     </>
   );
 }

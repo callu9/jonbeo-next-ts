@@ -1,18 +1,18 @@
-import { JSX } from "react";
 import { create } from "zustand";
 
 interface OverlayStore {
   modalFg?: boolean;
-  openModal: (modal?: JSX.Element) => void;
+  openModal: () => void;
   closeModal: () => void;
-  toast?: JSX.Element;
-  openToast: (toast?: JSX.Element) => void;
+  toastFg?: boolean;
+  openToast: () => void;
   closeToast: () => void;
 }
 export const useOverlayStore = create<OverlayStore>()((set) => ({
   modalFg: false,
+  toastFg: false,
   openModal: () => set({ modalFg: true }),
   closeModal: () => set({ modalFg: false }),
-  openToast: (toast) => set({ toast }),
-  closeToast: () => set({ toast: undefined }),
+  openToast: () => set({ toastFg: true }),
+  closeToast: () => set({ toastFg: undefined }),
 }));
