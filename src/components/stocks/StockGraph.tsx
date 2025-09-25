@@ -2,8 +2,10 @@
 
 import { cn } from "@/utils/classNames";
 import { useCallback, useMemo, useRef, useState } from "react";
+import PriceModal from "../PriceModal";
 import GraphTrack from "./GraphTrack";
 import PriceHandle from "./PriceHandle";
+import { useOverlayStore } from "@/store/overlayStore";
 
 export type StockGraphProps = {
   /** 현재가 (KRW) */
@@ -23,6 +25,7 @@ export default function StockGraph({
   onChange,
   className,
 }: StockGraphProps) {
+  const { modalFg } = useOverlayStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const [percent, setPercent] = useState<number>(initialPercent);
   const currentPercent = Math.floor(((currentPrice - TEMP_MIN) / (TEMP_MAX - TEMP_MIN)) * 100);
@@ -49,26 +52,29 @@ export default function StockGraph({
   );
 
   return (
-    <div
-      ref={containerRef}
-      className={cn("absolute inset-0 mt-10 grid", className)}
-      aria-label="평단가 그래프"
-    >
-      <div className="relative h-full w-full pr-6">
-        {/* 위/아래 영역 표시만 담당 */}
-        <GraphTrack percent={percent} currentPercent={currentPercent} />
+    <>
+      <div
+        ref={containerRef}
+        className={cn("absolute inset-0 mt-10 grid", className)}
+        aria-label="평단가 그래프"
+      >
+        <div className="relative h-full w-full pr-6">
+          {/* 위/아래 영역 표시만 담당 */}
+          <GraphTrack percent={percent} currentPercent={currentPercent} />
+        </div>
+        {/* 핸들: 상호작용만 담당 (포인터/키보드) */}
+        <PriceHandle
+          containerRef={containerRef}
+          percent={percent}
+          onChange={handlePercentChange}
+          ariaLabel="평단가 위치"
+        />
+        {/* 표시용 배지 */}
+        <div className="absolute top-2 right-2 rounded bg-black/60 px-2 py-1 text-xs text-white">
+          {percent}% · {targetAveragePrice.toLocaleString()}원
+        </div>
       </div>
-      {/* 핸들: 상호작용만 담당 (포인터/키보드) */}
-      <PriceHandle
-        containerRef={containerRef}
-        percent={percent}
-        onChange={handlePercentChange}
-        ariaLabel="평단가 위치"
-      />
-      {/* 표시용 배지 */}
-      <div className="absolute top-2 right-2 rounded bg-black/60 px-2 py-1 text-xs text-white">
-        {percent}% · {targetAveragePrice.toLocaleString()}원
-      </div>
-    </div>
+      {modalFg && <PriceModal price={targetAveragePrice} />}
+    </>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useOverlayStore } from "@/store/overlayStore";
 import { cn } from "@/utils/classNames";
 import { useCallback, useEffect, useRef, useState } from "react";
 import IconButton from "../IconButton";
@@ -24,6 +25,7 @@ export default function PriceHandle({
 }: PriceHandleProps) {
   if (!containerRef) return;
 
+  const { openModal } = useOverlayStore();
   const [dragging, setDragging] = useState(false);
   const rectRef = useRef<DOMRect | null>(null);
   const rafRef = useRef<number | null>(null);
@@ -66,7 +68,10 @@ export default function PriceHandle({
     [dragging, onChange, yToPercent]
   );
 
-  const endDrag = useCallback(() => setDragging(false), []);
+  const endDrag = useCallback(() => {
+    openModal();
+    setDragging(false);
+  }, []);
 
   useEffect(() => {
     return () => {
