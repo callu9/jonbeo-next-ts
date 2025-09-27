@@ -46,8 +46,9 @@ export default function PriceHandle({
     [containerRef, percent]
   );
 
-  const onPointerDown = useCallback(
+  const handlePointerDown = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
+      e.preventDefault(); // 모바일에서 브라우저 제스처 방지
       rectRef.current = containerRef.current?.getBoundingClientRect() ?? null;
       (e.currentTarget as HTMLDivElement).setPointerCapture?.(e.pointerId);
       setDragging(true);
@@ -56,7 +57,7 @@ export default function PriceHandle({
     [containerRef, onChange, yToPercent]
   );
 
-  const onPointerMove = useCallback(
+  const handlePointerMove = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
       if (!dragging) return;
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -68,10 +69,16 @@ export default function PriceHandle({
     [dragging, onChange, yToPercent]
   );
 
-  const endDrag = useCallback(() => {
-    openModal();
-    setDragging(false);
-  }, []);
+  const handlePointerUp = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      // 캡처 해제
+      (e.currentTarget as HTMLDivElement).releasePointerCapture?.(e.pointerId);
+      // 기존 로직
+      openModal();
+      setDragging(false);
+    },
+    [openModal]
+  );
 
   useEffect(() => {
     return () => {
@@ -84,7 +91,7 @@ export default function PriceHandle({
   return (
     <div
       className={cn(
-        "absolute left-0 z-10 mt-1 w-full select-none",
+        "absolute left-0 z-10 mt-1 w-full touch-none overscroll-contain select-none",
         dragging ? "cursor-grabbing" : "cursor-grab"
       )}
       style={{ top: handleTop }}
@@ -94,11 +101,10 @@ export default function PriceHandle({
       aria-valuemax={100}
       aria-valuenow={percent}
       tabIndex={0}
-      // onKeyDown={onKeyDown}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={endDrag}
-      onPointerCancel={endDrag}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
     >
       <div className="flex-center relative">
         <hr className="w-full border-[1px] border-dashed" />
