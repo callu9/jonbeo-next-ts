@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 export function AccountSummaryClient({ accountSummary }: { accountSummary?: MyAccountSummary }) {
   const [loading, setLoading] = useState(true);
-  const showSkeleton = useMinLoading(loading, 800);
+  const showSkeleton = useMinLoading(loading);
 
   useEffect(() => {
     accountSummary && setLoading(false);
@@ -23,7 +23,7 @@ export function AccountSummaryClient({ accountSummary }: { accountSummary?: MyAc
 
 export function StockListClient({ stocks }: { stocks?: PortfolioListItem[] }) {
   const [loading, setLoading] = useState(true);
-  const showSkeleton = useMinLoading(loading, 800);
+  const showSkeleton = useMinLoading(loading);
 
   useEffect(() => {
     stocks && setLoading(false);

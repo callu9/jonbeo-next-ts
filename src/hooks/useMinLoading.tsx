@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
  * @param minMs 최소 로딩 화면 유지 시간
  * @returns
  */
-export function useMinLoading(loading: boolean, minMs = 500) {
+export function useMinLoading(loading: boolean, minMs = 250) {
   const [show, setShow] = useState(false);
   const startRef = useRef<number | null>(null);
   const timerRef = useRef<number | null>(null);
