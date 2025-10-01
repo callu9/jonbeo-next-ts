@@ -91,7 +91,7 @@ export default function PriceHandle({
   return (
     <div
       className={cn(
-        "absolute left-0 z-10 mt-1 w-full touch-none overscroll-contain select-none",
+        "absolute left-0 z-10 mt-2 w-full touch-none overscroll-contain select-none",
         dragging ? "cursor-grabbing" : "cursor-grab"
       )}
       style={{ top: handleTop }}

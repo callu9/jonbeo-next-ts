@@ -4,7 +4,7 @@ import { useUnitStore } from "@/store/unitStore";
 import { PortfolioListItem } from "@/types/portfolio";
 import { cn } from "@/utils/classNames";
 import { formatDollar, formatNumberWithComma, formatWon } from "@/utils/common";
-import { motion } from "motion/react";
+import * as motion from "motion/react-m";
 import Link from "next/link";
 import AmountTransition from "../AmountTransition";
 

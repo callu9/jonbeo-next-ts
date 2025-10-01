@@ -1,5 +1,4 @@
-import { MSWComponent } from "@/providers/MSWComponent";
-import { SuccessToastProvider } from "@/providers/ToastProvider";
+import Providers from "@/providers/providers";
 import { pretendard } from "../../theme";
 import { initMocks } from "../mocks";
 import "./globals.css";
@@ -16,9 +15,7 @@ export default function RootLayout({
       <body className={`${pretendard.className} font-medium`}>
         <div className="flex-center">
           <div className="min-h-screen w-screen md:max-w-[48rem] md:shadow-lg dark:shadow-gray-600">
-            <MSWComponent>
-              <SuccessToastProvider>{children}</SuccessToastProvider>
-            </MSWComponent>
+            <Providers>{children}</Providers>
           </div>
         </div>
       </body>

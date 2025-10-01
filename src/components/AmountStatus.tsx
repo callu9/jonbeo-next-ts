@@ -2,9 +2,8 @@ import { useUnitStore } from "@/store/unitStore";
 import { MyAccountSummary } from "@/types/portfolio";
 import { cn } from "@/utils/classNames";
 import { formatDollar, formatNumberWithComma, formatWon } from "@/utils/common";
-import { AnimatePresence, motion } from "motion/react";
-import UnitButton from "./UnitButton";
 import AmountTransition from "./AmountTransition";
+import UnitButton from "./UnitButton";
 
 interface AmountStatusProps extends MyAccountSummary {
   name?: string;

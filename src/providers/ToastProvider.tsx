@@ -1,7 +1,8 @@
 "use client";
 
 import { useOverlayStore } from "@/store/overlayStore";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
+import * as motion from "motion/react-m";
 import { useEffect } from "react";
 
 export const SuccessToastProvider = ({ children }: { children?: React.ReactNode }) => {

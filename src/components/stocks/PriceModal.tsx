@@ -2,7 +2,8 @@
 
 import { useOverlayStore } from "@/store/overlayStore";
 import { formatDollar } from "@/utils/common";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
+import * as motion from "motion/react-m";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 

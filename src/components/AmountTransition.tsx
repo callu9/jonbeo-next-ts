@@ -2,7 +2,8 @@
 
 import { useUnitStore } from "@/store/unitStore";
 import { cn } from "@/utils/classNames";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
+import * as motion from "motion/react-m";
 
 export default function AmountTransition({
   id,
