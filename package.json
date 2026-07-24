@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "server:portfolio": "npx json-server --watch ./src/mocks/portfolio.json --port=4000",
-    "server:stocks": "npx json-server --watch ./src/mocks/stocks.json --port=4001"
+    "test": "jest",
+    "lighthouse": "bash ./lighthouse-run.sh"
   },
   "dependencies": {
     "@svgr/webpack": "^8.1.0",
@@ -26,6 +26,8 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@lhci/cli": "^0.15.1",
+    "@lhci/cli": "^0.15.1",
     "@tailwindcss/postcss": "^4.1.13",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.8.0",
