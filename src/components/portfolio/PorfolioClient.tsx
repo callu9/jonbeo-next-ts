@@ -11,7 +11,7 @@ export function AccountSummaryClient({ accountSummary }: { accountSummary?: MyAc
   const showSkeleton = useMinLoading(loading);
 
   useEffect(() => {
-    accountSummary && setLoading(false);
+    if (accountSummary) setLoading(false);
   }, [accountSummary]);
 
   return showSkeleton || !accountSummary ? (
@@ -26,7 +26,7 @@ export function StockListClient({ stocks }: { stocks?: PortfolioListItem[] }) {
   const showSkeleton = useMinLoading(loading);
 
   useEffect(() => {
-    stocks && setLoading(false);
+    if (stocks) setLoading(false);
   }, [stocks]);
 
   return showSkeleton || !stocks ? (

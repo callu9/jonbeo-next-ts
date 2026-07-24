@@ -9,8 +9,11 @@ export const SuccessToastProvider = ({ children }: { children?: React.ReactNode 
   const { toastFg, closeToast } = useOverlayStore();
 
   useEffect(() => {
-    toastFg && setTimeout(() => closeToast(), 3_000);
-  }, [toastFg]);
+    if (!toastFg) return;
+
+    const timeoutId = setTimeout(closeToast, 3_000);
+    return () => clearTimeout(timeoutId);
+  }, [closeToast, toastFg]);
 
   return (
     <>

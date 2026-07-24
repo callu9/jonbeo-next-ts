@@ -1,6 +1,5 @@
 "use client";
 
-import { useOverlayStore } from "@/store/overlayStore";
 import { cn } from "@/utils/classNames";
 import { useCallback, useMemo, useRef, useState } from "react";
 import GraphTrack from "./GraphTrack";
@@ -25,7 +24,6 @@ export default function StockGraph({
   onChange,
   className,
 }: StockGraphProps) {
-  const { modalFg } = useOverlayStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const [percent, setPercent] = useState<number>(initialPercent);
   const currentPercent = Math.floor(((currentPrice - TEMP_MIN) / (TEMP_MAX - TEMP_MIN)) * 100);
@@ -33,7 +31,7 @@ export default function StockGraph({
   // 희망 평단가 = 현재가 * (percent / 100)
   const targetAveragePrice = useMemo(
     () => Math.round(TEMP_MIN + (TEMP_MAX - TEMP_MIN) * (percent / 100)),
-    [currentPrice, percent]
+    [percent]
   );
 
   // 상태 변경과 외부 콜백 통합

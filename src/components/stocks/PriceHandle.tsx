@@ -23,8 +23,6 @@ export default function PriceHandle({
   onChange,
   ariaLabel = "핸들",
 }: PriceHandleProps) {
-  if (!containerRef) return;
-
   const { openModal } = useOverlayStore();
   const [dragging, setDragging] = useState(false);
   const rectRef = useRef<DOMRect | null>(null);

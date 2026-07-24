@@ -3,13 +3,13 @@ import { cn } from "@/utils/classNames";
 import { Graph } from "../../../public/images";
 import StockGraph from "./StockGraph";
 
-interface StockDetailGraph extends StockDetail {}
+type StockDetailGraphProps = StockDetail;
 
 export default function StockDetailGraph({
   currentPrice,
   profitLossRate,
   targetAveragePrice,
-}: StockDetailGraph) {
+}: StockDetailGraphProps) {
   const dotColor =
     profitLossRate > 0
       ? "bg-red-500"

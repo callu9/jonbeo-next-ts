@@ -20,7 +20,7 @@ export const stocksHandler = [
     await delay(120);
     const code = String(params.code).toUpperCase();
     const price = Number(params.price).toFixed(2);
-    let detail = stocks.list.find((el) => el.code === code) as StockDetail | undefined;
+    const detail = stocks.list.find((el) => el.code === code) as StockDetail | undefined;
     if (!detail) return notFound(`stock code ${code} not found`);
     detail.targetAveragePrice = Number(price);
     return HttpResponse.json(detail);
