@@ -12,21 +12,29 @@ Framer Motion을 사용한 인터렉션 구현을 목표로 합니다.
 ## Getting Started 🚀
 
 ```bash
-npx msw init public --save
-npm run server:portfolio
-npm run server:stocks
+npm install
 npm run dev
 ```
+
+개발 서버는 Next.js Route Handler가 제공하는 mock API를 함께 실행합니다.
+
+- `GET /api/portfolio`
+- `GET /api/stocks/:code`
 
 ## Goals 🥅
 
 - [ ] Framer Motion을 사용한 인터렉션 구현
-- [ ] BFF 구현을 통한 mock API 개발
+- [x] Next.js Route Handler 기반 mock API 구현
 - [ ] MTS 서비스 차트 구현
 
 ## Results 📸
 
 <img src="./screenshot/result.gif" alt="결과 화면 캡처" />
+
+## Documentation
+
+- [Performance refactoring report](./docs/performance-refactoring.md)
+- [Performance baseline design](./docs/superpowers/specs/2026-07-24-performance-baseline-design.md)
 
 ## Folder Structure 📁
 
@@ -35,16 +43,17 @@ public/
 |   +-- icons/
 |   +-- fonts/
 src/
-+-- apis/  (mock API BFF)
-|   +-- client.ts
 +-- app/
+|   +-- api/  (Route Handlers)
 |   +-- globals.css
 |   +-- layout.ts
 |   +-- page.ts
++-- apis/  (server data access)
 +-- components/ (reusable UI components)
 |   +-- Icon.tsx
 |   +-- Button.tsx
 |   +-- ...
++-- data/  (shared mock data access)
 +-- hooks/
 +-- mocks/
 +-- providers/
@@ -163,6 +172,8 @@ src/
 <img src="./screenshot/stock detail page - 최적화 후.png" alt="stock detail page 최적화 후" />
 
 #### (번외) Framer Motion 주요 성능 지표 (Core Web Vitals)에도 영향을 줄까?
+
+> 아래 기록은 과거 개발 서버 기반 측정 결과입니다. 현재 성능 기준과 후속 리팩터링 내용은 [Performance refactoring report](./docs/performance-refactoring.md)를 기준으로 확인하세요.
 
 번들 사이즈를 줄여보는 번들 최적화를 진행하면서,
 "당연히 크기가 줄어드니까 속도에도 도움이 되겠지?" 생각했다.
