@@ -13,7 +13,7 @@ import {
 export async function generateMetadata({
   params,
 }: {
-  params: { code: string };
+  params: Promise<{ code: string }>;
 }): Promise<Metadata> {
   const parameters = await params;
   const detail = await getStockDetail(parameters.code);
@@ -30,7 +30,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function StockDetailPage({ params }: { params: { code: string } }) {
+export default async function StockDetailPage({ params }: { params: Promise<{ code: string }> }) {
   const parameters = await params;
   const detail = await getStockDetail(parameters.code);
   if (!detail) notFound();

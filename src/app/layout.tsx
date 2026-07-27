@@ -1,9 +1,6 @@
 import Providers from "@/providers/providers";
 import { pretendard } from "../../theme";
-import { initMocks } from "../mocks";
 import "./globals.css";
-
-initMocks();
 
 export default function RootLayout({
   children,
