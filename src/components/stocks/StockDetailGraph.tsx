@@ -8,6 +8,7 @@ type StockDetailGraphProps = StockDetail;
 export default function StockDetailGraph({
   currentPrice,
   profitLossRate,
+  recentCandles,
   targetAveragePrice,
 }: StockDetailGraphProps) {
   const dotColor =
@@ -26,7 +27,8 @@ export default function StockDetailGraph({
       </div>
       <StockGraph
         currentPrice={currentPrice}
-        initialPercent={targetAveragePrice ? (targetAveragePrice / currentPrice) * 100 : undefined}
+        candles={recentCandles ?? []}
+        initialTargetPrice={targetAveragePrice}
       />
     </div>
   );

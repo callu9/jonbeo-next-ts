@@ -1,78 +1,79 @@
 "use client";
 
+import { useOverlayStore } from "@/store/overlayStore";
+import { PriceCandle } from "@/types/common";
 import { cn } from "@/utils/classNames";
-import { useCallback, useMemo, useRef, useState } from "react";
-import GraphTrack from "./GraphTrack";
-import PriceHandle from "./PriceHandle";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import PriceChart from "./PriceChart";
 import PriceModal from "./PriceModal";
+import { getChartPriceRange, toAreaChartData, type ChartPriceRange } from "./chartData";
 
 export type StockGraphProps = {
-  /** 현재가 (KRW) */
   currentPrice: number;
-  /** 초기 퍼센트 (0~100) - 기본 45% */
-  initialPercent?: number;
-  /** 퍼센트/희망 평단가 변경 시 호출 */
-  onChange?: (payload: { percent: number; targetAveragePrice: number }) => void;
+  candles: PriceCandle[];
+  initialTargetPrice?: number;
+  onChange?: (payload: { targetAveragePrice: number }) => void;
   className?: string;
 };
 
-const [TEMP_MIN, TEMP_MAX] = [150, 350];
+function clampTargetPrice(price: number, range: ChartPriceRange | null) {
+  if (!range) return price;
+  return Math.min(Math.max(price, range.min), range.max);
+}
 
 export default function StockGraph({
   currentPrice,
-  initialPercent = 40,
+  candles,
+  initialTargetPrice,
   onChange,
   className,
 }: StockGraphProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [percent, setPercent] = useState<number>(initialPercent);
-  const currentPercent = Math.floor(((currentPrice - TEMP_MIN) / (TEMP_MAX - TEMP_MIN)) * 100);
-
-  // 희망 평단가 = 현재가 * (percent / 100)
-  const targetAveragePrice = useMemo(
-    () => Math.round(TEMP_MIN + (TEMP_MAX - TEMP_MIN) * (percent / 100)),
-    [percent]
+  const { openModal } = useOverlayStore();
+  const range = useMemo(() => getChartPriceRange(candles), [candles]);
+  const data = useMemo(() => toAreaChartData(candles), [candles]);
+  const [targetPrice, setTargetPrice] = useState(() =>
+    clampTargetPrice(initialTargetPrice ?? currentPrice, range)
   );
 
-  // 상태 변경과 외부 콜백 통합
-  const handlePercentChange = useCallback(
-    (next: number) => {
-      const clamped = Math.max(0, Math.min(100, Math.round(next)));
-      setPercent(clamped);
-      if (onChange) {
-        onChange({
-          percent: clamped,
-          targetAveragePrice: Math.round(currentPrice * (clamped / 100)),
-        });
-      }
+  useEffect(() => {
+    setTargetPrice((price) => clampTargetPrice(price, range));
+  }, [range]);
+
+  const handleTargetPriceChange = useCallback(
+    (nextPrice: number) => {
+      setTargetPrice(nextPrice);
+      onChange?.({ targetAveragePrice: nextPrice });
     },
-    [currentPrice, onChange]
+    [onChange]
   );
 
   return (
     <>
       <div
-        ref={containerRef}
-        className={cn("absolute inset-0 mt-10 grid", className)}
+        className={cn("absolute inset-0 mt-10", className)}
         aria-label="평단가 그래프"
       >
-        <div className="relative h-full w-full pr-6">
-          {/* 위/아래 영역 표시만 담당 */}
-          <GraphTrack percent={percent} currentPercent={currentPercent} />
-        </div>
-        {/* 핸들: 상호작용만 담당 (포인터/키보드) */}
-        <PriceHandle
-          containerRef={containerRef}
-          percent={percent}
-          onChange={handlePercentChange}
-          ariaLabel="평단가 위치"
-        />
-        {/* 표시용 배지 */}
-        <div className="absolute top-2 right-2 rounded bg-black/60 px-2 py-1 text-xs text-white">
-          {percent}% · {targetAveragePrice.toLocaleString()}원
-        </div>
+        {range ? (
+          <>
+            <PriceChart
+              data={data}
+              targetPrice={targetPrice}
+              minPrice={range.min}
+              maxPrice={range.max}
+              onTargetPriceChange={handleTargetPriceChange}
+              onTargetPriceCommit={openModal}
+            />
+            <div className="absolute top-2 right-2 rounded bg-black/60 px-2 py-1 text-xs text-white">
+              목표 평단 ${targetPrice.toFixed(2)}
+            </div>
+          </>
+        ) : (
+          <div className="flex h-full items-center justify-center rounded-lg bg-gray-100 text-sm text-gray-500 dark:bg-zinc-900 dark:text-zinc-400">
+            표시할 가격 기록이 없습니다.
+          </div>
+        )}
       </div>
-      <PriceModal price={targetAveragePrice} />
+      <PriceModal price={targetPrice} />
     </>
   );
 }

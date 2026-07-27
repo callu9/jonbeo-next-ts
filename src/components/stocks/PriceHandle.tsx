@@ -1,110 +1,122 @@
 "use client";
 
-import { useOverlayStore } from "@/store/overlayStore";
 import { cn } from "@/utils/classNames";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import IconButton from "../IconButton";
 
 export type PriceHandleProps = {
-  /** 그래프 컨테이너 ref (좌표계 기준) */
-  containerRef: React.RefObject<HTMLDivElement | null>;
-  /** 현재 퍼센트 (0~100) */
-  percent: number;
-  /** 퍼센트 변경 콜백 */
-  onChange: (nextPercent: number) => void;
-  /** 접근성 라벨 */
+  /** The chart coordinate system used to translate pointer positions. */
+  containerRef: RefObject<HTMLDivElement | null>;
+  /** Distance from the chart top in pixels. */
+  y: number | null;
+  /** Current target price exposed to assistive technology. */
+  price: number;
+  minPrice: number;
+  maxPrice: number;
+  /** Reports a chart-relative Y coordinate while dragging. */
+  onChangeY: (y: number) => void;
+  /** Opens the save modal after the user releases the handle. */
+  onCommit: () => void;
   ariaLabel?: string;
 };
 
-/** 포인터/키보드로 퍼센트를 변경하는 핸들 컴포넌트 */
+const KEYBOARD_STEP = 4;
+
+/** Pointer overlay that delegates price conversion to the chart owning component. */
 export default function PriceHandle({
   containerRef,
-  percent,
-  onChange,
+  y,
+  price,
+  minPrice,
+  maxPrice,
+  onChangeY,
+  onCommit,
   ariaLabel = "핸들",
 }: PriceHandleProps) {
-  const { openModal } = useOverlayStore();
   const [dragging, setDragging] = useState(false);
   const rectRef = useRef<DOMRect | null>(null);
   const rafRef = useRef<number | null>(null);
 
-  const clamp = (v: number) => Math.max(0, Math.min(100, v));
-
-  const yToPercent = useCallback(
+  const clientYToChartY = useCallback(
     (clientY: number) => {
       const rect = rectRef.current ?? containerRef.current?.getBoundingClientRect();
-      if (!rect) return percent;
+      if (!rect) return y ?? 0;
 
-      // 컨테이너 내부로 좌표 클램핑
-      const y = Math.min(Math.max(clientY, rect.top), rect.bottom);
-      // 상단 100% / 하단 0% 로 변환
-      const ratio = 1 - (y - rect.top) / Math.max(1, rect.height);
-      return clamp(Math.round(ratio * 100));
+      return Math.min(Math.max(clientY - rect.top, 0), rect.height);
     },
-    [containerRef, percent]
+    [containerRef, y]
   );
 
   const handlePointerDown = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      e.preventDefault(); // 모바일에서 브라우저 제스처 방지
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      event.preventDefault();
       rectRef.current = containerRef.current?.getBoundingClientRect() ?? null;
-      (e.currentTarget as HTMLDivElement).setPointerCapture?.(e.pointerId);
+      event.currentTarget.setPointerCapture?.(event.pointerId);
       setDragging(true);
-      onChange(yToPercent(e.clientY));
+      onChangeY(clientYToChartY(event.clientY));
     },
-    [containerRef, onChange, yToPercent]
+    [clientYToChartY, containerRef, onChangeY]
   );
 
   const handlePointerMove = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
+    (event: React.PointerEvent<HTMLDivElement>) => {
       if (!dragging) return;
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      const clientY = e.clientY;
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+
+      const clientY = event.clientY;
       rafRef.current = requestAnimationFrame(() => {
-        onChange(yToPercent(clientY));
+        rafRef.current = null;
+        onChangeY(clientYToChartY(clientY));
       });
     },
-    [dragging, onChange, yToPercent]
+    [clientYToChartY, dragging, onChangeY]
   );
 
   const handlePointerUp = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      // 캡처 해제
-      (e.currentTarget as HTMLDivElement).releasePointerCapture?.(e.pointerId);
-      // 기존 로직
-      openModal();
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      event.currentTarget.releasePointerCapture?.(event.pointerId);
       setDragging(false);
+      rectRef.current = null;
+      onCommit();
     },
-    [openModal]
+    [onCommit]
+  );
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
+      event.preventDefault();
+      onChangeY(Math.max(0, (y ?? 0) + (event.key === "ArrowUp" ? -KEYBOARD_STEP : KEYBOARD_STEP)));
+    },
+    [onChangeY, y]
   );
 
   useEffect(() => {
     return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
   }, []);
-
-  const handleTop = `${100 - percent}%`;
 
   return (
     <div
       className={cn(
-        "absolute left-0 z-10 mt-2 w-full touch-none overscroll-contain select-none",
+        "absolute left-0 z-10 w-full touch-none overscroll-contain select-none",
         dragging ? "cursor-grabbing" : "cursor-grab"
       )}
-      style={{ top: handleTop }}
+      style={{ top: `${y ?? 0}px` }}
       role="slider"
       aria-label={ariaLabel}
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-valuenow={percent}
+      aria-valuemin={minPrice}
+      aria-valuemax={maxPrice}
+      aria-valuenow={price}
       tabIndex={0}
+      onKeyDown={handleKeyDown}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
     >
-      <div className="flex-center relative">
+      <div className="flex-center relative -translate-y-1/2">
         <hr className="w-full border-[1px] border-dashed" />
         <div
           className={cn(
@@ -112,7 +124,7 @@ export default function PriceHandle({
             "drop-shadow-[0_4px_6px_rgba(0,0,0,0.08)] dark:drop-shadow-[0_4px_6px_rgba(100,100,100,0.2)]"
           )}
         >
-          <IconButton iconNm="adjust" />
+          <IconButton iconNm="adjust" aria-label="평단가 위치 조절" />
         </div>
       </div>
     </div>
