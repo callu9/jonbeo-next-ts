@@ -1,5 +1,4 @@
 import { StockDetail } from "@/types/stock";
-import { cn } from "@/utils/classNames";
 import { Graph } from "../../../public/images";
 import StockGraph from "./StockGraph";
 
@@ -11,22 +10,11 @@ export default function StockDetailGraph({
   recentCandles,
   targetAveragePrice,
 }: StockDetailGraphProps) {
-  const dotColor =
-    profitLossRate > 0
-      ? "bg-red-500"
-      : profitLossRate < 0
-        ? "bg-blue-500"
-        : "bg-gray-400 dark:bg-gray-200";
   return (
     <div className="flex-center relative aspect-square items-center self-stretch">
-      <div className="absolute top-[32%] right-4 z-1 md:top-[30%]">
-        <div className="relative">
-          <div className={cn("h-4 w-4 rounded-full", dotColor)} />
-          <div className={cn("absolute top-0 h-4 w-4 animate-ping rounded-full", dotColor)} />
-        </div>
-      </div>
       <StockGraph
         currentPrice={currentPrice}
+        profitLossRate={profitLossRate}
         candles={recentCandles ?? []}
         initialTargetPrice={targetAveragePrice}
       />

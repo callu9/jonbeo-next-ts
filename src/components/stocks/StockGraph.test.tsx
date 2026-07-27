@@ -4,7 +4,22 @@ import StockGraph from "./StockGraph";
 
 jest.mock("./PriceChart", () => ({
   __esModule: true,
-  default: ({ targetPrice }: { targetPrice: number }) => <div data-testid="price-chart">{targetPrice}</div>,
+  default: ({
+    targetPrice,
+    currentPrice,
+    currentPriceTone,
+  }: {
+    targetPrice: number;
+    currentPrice: number;
+    currentPriceTone: string;
+  }) => (
+    <>
+      <div data-testid="price-chart">{targetPrice}</div>
+      <output data-testid="current-price-marker-props">
+        {currentPrice}:{currentPriceTone}
+      </output>
+    </>
+  ),
 }));
 
 jest.mock("./PriceModal", () => ({
@@ -25,8 +40,21 @@ describe("StockGraph", () => {
   });
 
   it("starts the chart at the supplied target average price", () => {
-    render(<StockGraph currentPrice={121.26} candles={candles} initialTargetPrice={122.5} />);
+    render(
+      <StockGraph
+        currentPrice={121.26}
+        profitLossRate={-13.39}
+        candles={candles}
+        initialTargetPrice={122.5}
+      />
+    );
 
     expect(screen.getByTestId("price-chart")).toHaveTextContent("122.5");
+  });
+
+  it("passes the current price and negative trend to the chart marker", () => {
+    render(<StockGraph currentPrice={121.26} profitLossRate={-13.39} candles={candles} />);
+
+    expect(screen.getByTestId("current-price-marker-props")).toHaveTextContent("121.26:negative");
   });
 });

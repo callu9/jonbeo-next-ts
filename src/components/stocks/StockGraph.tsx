@@ -10,6 +10,7 @@ import { getChartPriceRange, toAreaChartData, type ChartPriceRange } from "./cha
 
 export type StockGraphProps = {
   currentPrice: number;
+  profitLossRate: number;
   candles: PriceCandle[];
   initialTargetPrice?: number;
   onChange?: (payload: { targetAveragePrice: number }) => void;
@@ -23,6 +24,7 @@ function clampTargetPrice(price: number, range: ChartPriceRange | null) {
 
 export default function StockGraph({
   currentPrice,
+  profitLossRate,
   candles,
   initialTargetPrice,
   onChange,
@@ -34,6 +36,8 @@ export default function StockGraph({
   const [targetPrice, setTargetPrice] = useState(() =>
     clampTargetPrice(initialTargetPrice ?? currentPrice, range)
   );
+  const currentPriceTone =
+    profitLossRate > 0 ? "positive" : profitLossRate < 0 ? "negative" : "neutral";
 
   useEffect(() => {
     setTargetPrice((price) => clampTargetPrice(price, range));
@@ -60,6 +64,8 @@ export default function StockGraph({
               targetPrice={targetPrice}
               minPrice={range.min}
               maxPrice={range.max}
+              currentPrice={currentPrice}
+              currentPriceTone={currentPriceTone}
               onTargetPriceChange={handleTargetPriceChange}
               onTargetPriceCommit={openModal}
             />
