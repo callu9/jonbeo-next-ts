@@ -84,9 +84,11 @@ describe("PriceHandle", () => {
     fireEvent.pointerMove(handle, { pointerId: 1, clientY: 260 });
 
     expect(onChangeY).toHaveBeenCalledTimes(1);
+    expect(window.requestAnimationFrame).toHaveBeenCalledTimes(1);
     runNextFrame();
     expect(onChangeY).toHaveBeenLastCalledWith(160);
     expect(onChangeY).toHaveBeenCalledTimes(2);
+    expect(frameCallbacks.size).toBe(0);
   });
 
   it("flushes the latest position before committing on pointer release", () => {
@@ -107,6 +109,28 @@ describe("PriceHandle", () => {
 
     expect(onChangeY).toHaveBeenLastCalledWith(160);
     expect(onCommit).toHaveBeenCalledTimes(1);
+    expect(onChangeY.mock.invocationCallOrder[1]).toBeLessThan(onCommit.mock.invocationCallOrder[0]);
+    expect(frameCallbacks.size).toBe(0);
+  });
+
+  it("cancels a pending frame when the handle unmounts", () => {
+    const onChangeY = jest.fn();
+    const { unmount } = render(<HandleFixture onChangeY={onChangeY} onCommit={jest.fn()} />);
+
+    const chartContainer = screen.getByTestId("chart-container");
+    Object.defineProperty(chartContainer, "getBoundingClientRect", {
+      configurable: true,
+      value: () => ({ top: 100, bottom: 300, height: 200 }),
+    });
+
+    const handle = screen.getByRole("slider", { name: "평단가 위치" });
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 140 });
+    fireEvent.pointerMove(handle, { pointerId: 1, clientY: 260 });
+    unmount();
+
+    expect(window.cancelAnimationFrame).toHaveBeenCalledTimes(1);
+    expect(frameCallbacks.size).toBe(0);
+    expect(onChangeY).toHaveBeenCalledTimes(1);
   });
 
   it("reports the chart-relative y coordinate as the handle is dragged", () => {

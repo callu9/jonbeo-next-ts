@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { AccountSummaryClient, StockListClient } from "./PorfolioClient";
 
 jest.mock("../AmountStatus", () => ({
@@ -24,22 +25,22 @@ describe("PorfolioClient", () => {
     profitLossRate: 20,
   };
 
-  it("renders server-provided summary on the first render", () => {
-    render(
+  it("renders server-provided summary in the initial server markup", () => {
+    const markup = renderToStaticMarkup(
       <AccountSummaryClient
         accountSummary={{ cashBalance: 0, todayProfitMoney: 0, todayProfitRate: 0 }}
       />
     );
 
-    expect(screen.getByText("balance:0")).toBeInTheDocument();
-    expect(screen.queryByText("summary-skeleton")).not.toBeInTheDocument();
+    expect(markup).toContain("balance:0");
+    expect(markup).not.toContain("summary-skeleton");
   });
 
-  it("renders server-provided stock list on the first render", () => {
-    render(<StockListClient stocks={[stock]} />);
+  it("renders server-provided stock list in the initial server markup", () => {
+    const markup = renderToStaticMarkup(<StockListClient stocks={[stock]} />);
 
-    expect(screen.getByText("stock:AAPL")).toBeInTheDocument();
-    expect(screen.queryByText("stock-skeleton")).not.toBeInTheDocument();
+    expect(markup).toContain("stock:AAPL");
+    expect(markup).not.toContain("stock-skeleton");
   });
 
   it("keeps summary and list skeleton fallbacks for absent data", () => {

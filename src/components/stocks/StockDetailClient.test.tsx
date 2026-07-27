@@ -1,5 +1,6 @@
 import type { StockDetail } from "@/types/stock";
 import { render, screen } from "@testing-library/react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { StockDetailGraphClient, StockStatusClient } from "./StockDetailClient";
 
 jest.mock("../AmountStatus", () => ({
@@ -35,18 +36,20 @@ describe("StockDetailClient", () => {
     updatedAt: 0,
   };
 
-  it("renders zero-valued stock status instead of a skeleton", () => {
-    render(<StockStatusClient name="Zero" currentPrice={0} profitLossMoney={0} profitLossRate={0} />);
+  it("renders zero-valued stock status in the initial server markup", () => {
+    const markup = renderToStaticMarkup(
+      <StockStatusClient name="Zero" currentPrice={0} profitLossMoney={0} profitLossRate={0} />
+    );
 
-    expect(screen.getByText("status:0:0:0")).toBeInTheDocument();
-    expect(screen.queryByText("status-skeleton")).not.toBeInTheDocument();
+    expect(markup).toContain("status:0:0:0");
+    expect(markup).not.toContain("status-skeleton");
   });
 
-  it("renders the provided stock graph on the first render", () => {
-    render(<StockDetailGraphClient {...stockDetail} />);
+  it("renders the provided stock graph in the initial server markup", () => {
+    const markup = renderToStaticMarkup(<StockDetailGraphClient {...stockDetail} />);
 
-    expect(screen.getByText("stock-graph")).toBeInTheDocument();
-    expect(screen.queryByText("graph-skeleton")).not.toBeInTheDocument();
+    expect(markup).toContain("stock-graph");
+    expect(markup).not.toContain("graph-skeleton");
   });
 
   it("keeps the stock-status skeleton fallback for absent data", () => {
