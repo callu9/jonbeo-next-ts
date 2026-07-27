@@ -8,8 +8,6 @@
 💡 motion` 컴포넌트는 필요하지 않은 기능도 모두 번들에 포함하기 때문에 더 무겁다.
  */
 
-// import { domAnimation } from "motion/react";
-// export default domAnimation;
+import { domAnimation } from "motion/react";
 
-import { domMax } from "motion/react";
-export default domMax;
+export default domAnimation;
