@@ -24,7 +24,7 @@
 
 ### 차트 드래그
 
-`PriceChart`는 pointer move가 여러 번 발생해도 한 animation frame에 한 번만 부모의 목표 가격 변경을 요청한다. 가장 최근 chart Y 좌표를 ref에 보관하고 `requestAnimationFrame` callback에서 `coordinateToPrice`, 범위 제한, 소수 둘째 자리 반올림을 수행한다.
+`PriceHandle`은 pointer move가 여러 번 발생해도 한 animation frame에 한 번만 부모의 목표 가격 변경을 요청한다. 가장 최근 chart Y 좌표를 ref에 보관하고 `requestAnimationFrame` callback에서 `PriceChart`가 `coordinateToPrice`, 범위 제한, 소수 둘째 자리 반올림을 수행한다.
 
 pointer up과 component unmount 시 예약된 frame은 취소한다. pointer up은 마지막 좌표를 한 번 반영한 뒤 기존 `onTargetPriceCommit`을 호출해 모달 흐름을 유지한다.
 
