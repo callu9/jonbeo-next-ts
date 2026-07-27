@@ -9,23 +9,24 @@ type StockStatusProps = Partial<
 >;
 
 export function StockStatusClient(props: StockStatusProps) {
-  const hasStockStatus =
-    props.currentPrice !== undefined &&
-    props.currentPrice !== null &&
-    props.profitLossMoney !== undefined &&
-    props.profitLossMoney !== null &&
-    props.profitLossRate !== undefined &&
-    props.profitLossRate !== null;
+  if (
+    props.currentPrice === undefined ||
+    props.currentPrice === null ||
+    props.profitLossMoney === undefined ||
+    props.profitLossMoney === null ||
+    props.profitLossRate === undefined ||
+    props.profitLossRate === null
+  ) {
+    return <AmountStatusSkeleton isNameNeeded={true} />;
+  }
 
-  return hasStockStatus ? (
+  return (
     <AmountStatus
       name={props.name}
       cashBalance={props.currentPrice}
       todayProfitMoney={props.profitLossMoney}
       todayProfitRate={props.profitLossRate}
     />
-  ) : (
-    <AmountStatusSkeleton isNameNeeded={true} />
   );
 }
 
