@@ -48,6 +48,8 @@ function PriceChartFixture({ onCommit }: { onCommit: () => void }) {
         targetPrice={targetPrice}
         minPrice={118}
         maxPrice={124}
+        currentPrice={121.26}
+        currentPriceTone="negative"
         onTargetPriceChange={setTargetPrice}
         onTargetPriceCommit={onCommit}
       />
@@ -112,5 +114,12 @@ describe("PriceChart", () => {
 
     expect(screen.getByTestId("target-price")).toHaveTextContent("118.5");
     expect(onCommit).toHaveBeenCalledTimes(1);
+  });
+
+  it("positions the current-price marker at the area series coordinate", () => {
+    render(<PriceChartFixture onCommit={jest.fn()} />);
+
+    expect(screen.getByTestId("current-price-marker")).toHaveStyle({ top: "40px" });
+    expect(mockPriceToCoordinate).toHaveBeenCalledWith(121.26);
   });
 });

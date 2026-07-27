@@ -20,11 +20,14 @@ export type PriceChartProps = {
   targetPrice: number;
   minPrice: number;
   maxPrice: number;
+  currentPrice: number;
+  currentPriceTone: CurrentPriceTone;
   onTargetPriceChange: (price: number) => void;
   onTargetPriceCommit: () => void;
 };
 
 type AreaSeriesApi = ISeriesApi<"Area", Time>;
+export type CurrentPriceTone = "positive" | "negative" | "neutral";
 
 const priceLineOptions = (price: number): CreatePriceLineOptions => ({
   price,
@@ -41,6 +44,8 @@ export default function PriceChart({
   targetPrice,
   minPrice,
   maxPrice,
+  currentPrice,
+  currentPriceTone,
   onTargetPriceChange,
   onTargetPriceCommit,
 }: PriceChartProps) {
@@ -50,6 +55,7 @@ export default function PriceChart({
   const seriesRef = useRef<AreaSeriesApi | null>(null);
   const priceLineRef = useRef<IPriceLine | null>(null);
   const [handleY, setHandleY] = useState<number | null>(null);
+  const [currentPriceY, setCurrentPriceY] = useState<number | null>(null);
 
   useEffect(() => {
     const host = chartHostRef.current;
@@ -97,7 +103,8 @@ export default function PriceChart({
     if (priceLineRef.current) series.removePriceLine(priceLineRef.current);
     priceLineRef.current = series.createPriceLine(priceLineOptions(targetPrice));
     setHandleY(series.priceToCoordinate(targetPrice));
-  }, [data, targetPrice]);
+    setCurrentPriceY(series.priceToCoordinate(currentPrice));
+  }, [currentPrice, data, targetPrice]);
 
   const handleChangeY = useCallback(
     (y: number) => {
@@ -109,10 +116,30 @@ export default function PriceChart({
     },
     [maxPrice, minPrice, onTargetPriceChange]
   );
+  const currentPriceToneClasses =
+    currentPriceTone === "positive"
+      ? "bg-red-500"
+      : currentPriceTone === "negative"
+        ? "bg-blue-500"
+        : "bg-gray-400 dark:bg-gray-200";
 
   return (
     <div ref={containerRef} data-testid="price-chart" className="relative h-full w-full" aria-label="평단가 그래프">
       <div ref={chartHostRef} className="h-full w-full" />
+      {currentPriceY !== null && (
+        <div
+          data-testid="current-price-marker"
+          className="absolute right-4 z-10 -translate-y-1/2"
+          style={{ top: `${currentPriceY}px` }}
+        >
+          <div
+            className={`h-4 w-4 rounded-full ${currentPriceToneClasses}`}
+          />
+          <div
+            className={`absolute top-0 h-4 w-4 animate-ping rounded-full ${currentPriceToneClasses}`}
+          />
+        </div>
+      )}
       <PriceHandle
         containerRef={containerRef}
         y={handleY}
