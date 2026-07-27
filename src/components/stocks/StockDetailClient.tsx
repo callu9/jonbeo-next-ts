@@ -11,8 +11,11 @@ type StockStatusProps = Partial<
 export function StockStatusClient(props: StockStatusProps) {
   const hasStockStatus =
     props.currentPrice !== undefined &&
+    props.currentPrice !== null &&
     props.profitLossMoney !== undefined &&
-    props.profitLossRate !== undefined;
+    props.profitLossMoney !== null &&
+    props.profitLossRate !== undefined &&
+    props.profitLossRate !== null;
 
   return hasStockStatus ? (
     <AmountStatus

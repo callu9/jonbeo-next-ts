@@ -54,4 +54,16 @@ describe("StockDetailClient", () => {
 
     expect(screen.getByText("status-skeleton")).toBeInTheDocument();
   });
+
+  it("keeps the stock-status skeleton fallback for null data", () => {
+    render(
+      <StockStatusClient
+        currentPrice={null as unknown as number}
+        profitLossMoney={null as unknown as number}
+        profitLossRate={null as unknown as number}
+      />
+    );
+
+    expect(screen.getByText("status-skeleton")).toBeInTheDocument();
+  });
 });
