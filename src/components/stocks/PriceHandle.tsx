@@ -36,6 +36,7 @@ export default function PriceHandle({
   const [dragging, setDragging] = useState(false);
   const rectRef = useRef<DOMRect | null>(null);
   const rafRef = useRef<number | null>(null);
+  const pendingClientYRef = useRef<number | null>(null);
 
   const clientYToChartY = useCallback(
     (clientY: number) => {
@@ -47,10 +48,20 @@ export default function PriceHandle({
     [containerRef, y]
   );
 
+  const flushPendingChange = useCallback(() => {
+    if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    rafRef.current = null;
+
+    const clientY = pendingClientYRef.current;
+    pendingClientYRef.current = null;
+    if (clientY !== null) onChangeY(clientYToChartY(clientY));
+  }, [clientYToChartY, onChangeY]);
+
   const handlePointerDown = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
       event.preventDefault();
       rectRef.current = containerRef.current?.getBoundingClientRect() ?? null;
+      pendingClientYRef.current = null;
       event.currentTarget.setPointerCapture?.(event.pointerId);
       setDragging(true);
       onChangeY(clientYToChartY(event.clientY));
@@ -61,25 +72,26 @@ export default function PriceHandle({
   const handlePointerMove = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
       if (!dragging) return;
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+      pendingClientYRef.current = event.clientY;
+      if (rafRef.current !== null) return;
 
-      const clientY = event.clientY;
       rafRef.current = requestAnimationFrame(() => {
         rafRef.current = null;
-        onChangeY(clientYToChartY(clientY));
+        flushPendingChange();
       });
     },
-    [clientYToChartY, dragging, onChangeY]
+    [dragging, flushPendingChange]
   );
 
   const handlePointerUp = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
       event.currentTarget.releasePointerCapture?.(event.pointerId);
+      flushPendingChange();
       setDragging(false);
       rectRef.current = null;
       onCommit();
     },
-    [onCommit]
+    [flushPendingChange, onCommit]
   );
 
   const handleKeyDown = useCallback(
@@ -94,6 +106,7 @@ export default function PriceHandle({
   useEffect(() => {
     return () => {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+      pendingClientYRef.current = null;
     };
   }, []);
 
