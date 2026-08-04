@@ -109,6 +109,17 @@ production build와 `next start` 환경에서 총 6회 측정을 완료했다.
 
 설정된 performance assertion은 모두 통과했다. 이 값은 동일한 로컬 환경에서의 비교 기준이며, 배포 환경의 절대 점수로 해석하지 않는다. CI 머신, 네트워크, Chrome 버전 차이로 개별 run은 달라질 수 있으므로 이후 변경도 같은 URL·반복 횟수·preset으로 비교한다.
 
+### 2026-08-04 초기 금액 정적 렌더 실험
+
+초기 LCP 후보인 큰 금액을 일반 `span`으로 먼저 표시하고, 사용자가 통화 단위를 바꿀 때만 Motion 전환을 실행하도록 변경했다. production build에서 홈과 종목 상세를 각각 3회 측정했다.
+
+| Route | Runs | Performance median | FCP median | LCP median | TBT median | CLS median | Baseline LCP | Delta |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `/` | 3 | 0.89 | 331ms | 2169ms | 0ms | 0 | 2166ms | +3ms |
+| `/stocks/AAPL` | 3 | 0.89 | 418ms | 2185ms | 0ms | 0 | 2186ms | -1ms |
+
+TBT와 CLS는 회귀하지 않았지만, 두 route 모두 LCP 중앙값이 100ms 이상 개선되어야 한다는 조건을 충족하지 못했다. 따라서 이 실험은 원격 브랜치 push와 PR 생성 없이 로컬 검증 결과로 보관한다. 다음 가설은 2MB를 넘는 Pretendard variable font 전송량을 줄이는 것이다.
+
 ## 커밋
 
 - `c47f9bb` docs: add performance baseline plan
