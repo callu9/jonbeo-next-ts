@@ -2,41 +2,35 @@
 
 import AmountStatus, { AmountStatusSkeleton } from "@/components/AmountStatus";
 import StockDetailGraph, { StockDetailGraphSkeleton } from "@/components/stocks/StockDetailGraph";
-import { useMinLoading } from "@/hooks/useMinLoading";
 import { StockDetail } from "@/types/stock";
-import { useEffect, useState } from "react";
 
 type StockStatusProps = Partial<
   Pick<StockDetail, "name" | "currentPrice" | "profitLossMoney" | "profitLossRate">
 >;
 
 export function StockStatusClient(props: StockStatusProps) {
-  const [loading, setLoading] = useState(true);
-  const showSkeleton = useMinLoading(loading);
+  const { currentPrice, profitLossMoney, profitLossRate } = props;
+  if (
+    currentPrice === undefined ||
+    currentPrice === null ||
+    profitLossMoney === undefined ||
+    profitLossMoney === null ||
+    profitLossRate === undefined ||
+    profitLossRate === null
+  ) {
+    return <AmountStatusSkeleton isNameNeeded={true} />;
+  }
 
-  useEffect(() => {
-    if (props.currentPrice !== undefined) setLoading(false);
-  }, [props.currentPrice]);
-
-  return showSkeleton || !props.currentPrice || !props.profitLossMoney || !props.profitLossRate ? (
-    <AmountStatusSkeleton isNameNeeded={true} />
-  ) : (
+  return (
     <AmountStatus
       name={props.name}
-      cashBalance={props.currentPrice}
-      todayProfitMoney={props.profitLossMoney}
-      todayProfitRate={props.profitLossRate}
+      cashBalance={currentPrice}
+      todayProfitMoney={profitLossMoney}
+      todayProfitRate={profitLossRate}
     />
   );
 }
 
 export function StockDetailGraphClient(props: StockDetail) {
-  const [loading, setLoading] = useState(true);
-  const showSkeleton = useMinLoading(loading, 500);
-
-  useEffect(() => {
-    setLoading(false);
-  }, [props]);
-
-  return showSkeleton || !props ? <StockDetailGraphSkeleton /> : <StockDetailGraph {...props} />;
+  return props ? <StockDetailGraph {...props} /> : <StockDetailGraphSkeleton />;
 }
