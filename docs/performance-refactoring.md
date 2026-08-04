@@ -109,6 +109,17 @@ production build와 `next start` 환경에서 총 6회 측정을 완료했다.
 
 설정된 performance assertion은 모두 통과했다. 이 값은 동일한 로컬 환경에서의 비교 기준이며, 배포 환경의 절대 점수로 해석하지 않는다. CI 머신, 네트워크, Chrome 버전 차이로 개별 run은 달라질 수 있으므로 이후 변경도 같은 URL·반복 횟수·preset으로 비교한다.
 
+### 2026-08-04 Pretendard dynamic subset experiment
+
+단일 `PretendardVariable.woff2` preload를 local unicode-range dynamic subset으로 교체한 뒤 production Lighthouse를 route별 3회 실행했다. 이전 단일 font 요청은 2,057,992 bytes였고, P1은 각 route에 필요한 subset만 요청했다.
+
+| Route | Performance median | FCP median | LCP median | TBT median | CLS median | Font transfer median | P0 LCP | LCP delta |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `/` | 0.99 | 577ms | 813ms | 0ms | 0.00012 | 230,832B | 2169ms | -1356ms |
+| `/stocks/AAPL` | 1.00 | 489ms | 653ms | 0ms | 0.00001 | 158,260B | 2185ms | -1532ms |
+
+LCP 후보는 동일한 큰 금액 텍스트였고, font transfer는 홈에서 약 89%, 상세에서 약 92% 줄었다. 이 측정은 기존 2MB font를 제공하던 포트 3000 서버를 종료한 뒤 P1 production build로 재실행한 결과다.
+
 ## 커밋
 
 - `c47f9bb` docs: add performance baseline plan
