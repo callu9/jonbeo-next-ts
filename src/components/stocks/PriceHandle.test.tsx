@@ -96,6 +96,37 @@ describe("PriceHandle", () => {
     expect(frameCallbacks.size).toBe(0);
   });
 
+  it("reports the final position before committing on pointer release", () => {
+    const calls: string[] = [];
+    const onChangeY = jest.fn(() => calls.push("change"));
+    const onCommit = jest.fn(() => calls.push("commit"));
+    render(<HandleFixture onChangeY={onChangeY} onCommit={onCommit} />);
+    const chartContainer = screen.getByTestId("chart-container");
+    Object.defineProperty(chartContainer, "getBoundingClientRect", { configurable: true, value: () => ({ top: 100, bottom: 300, height: 200 }) });
+    const handle = screen.getByRole("slider", { name: "평단가 위치" });
+
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 140 });
+    fireEvent.pointerMove(handle, { pointerId: 1, clientY: 260 });
+    fireEvent.pointerUp(handle, { pointerId: 1, clientY: 260 });
+
+    expect(calls.slice(-2)).toEqual(["change", "commit"]);
+  });
+
+  it("cancels a pending animation frame on unmount", () => {
+    const onChangeY = jest.fn();
+    const { unmount } = render(<HandleFixture onChangeY={onChangeY} onCommit={jest.fn()} />);
+    const chartContainer = screen.getByTestId("chart-container");
+    Object.defineProperty(chartContainer, "getBoundingClientRect", { configurable: true, value: () => ({ top: 100, bottom: 300, height: 200 }) });
+    const handle = screen.getByRole("slider", { name: "평단가 위치" });
+
+    fireEvent.pointerDown(handle, { pointerId: 1, clientY: 140 });
+    fireEvent.pointerMove(handle, { pointerId: 1, clientY: 260 });
+    unmount();
+
+    expect(window.cancelAnimationFrame).toHaveBeenCalledWith(1);
+    expect(frameCallbacks.size).toBe(0);
+  });
+
   it("reports the chart-relative y coordinate as the handle is dragged", () => {
     const onChangeY = jest.fn();
     const onCommit = jest.fn();
