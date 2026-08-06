@@ -13,7 +13,7 @@
 - Do not add dependencies.
 - Preserve `PriceChartProps`, chart interactions, target-price label, modal, and empty-state behavior.
 - Fall back to loading the chart when `IntersectionObserver` is unavailable.
-- Write PR titles, bodies, and top-level comments in Korean.
+- Write PR titles in English conventional-commit style; write bodies and top-level comments in Korean.
 - Record production Lighthouse results in a Korean PR comment after three `/stocks/AAPL` runs.
 
 ---
